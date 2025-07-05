@@ -2,21 +2,131 @@
 <html>
 <head>
     <title>Upload PPTX Files</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 48px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 36px 28px 28px 28px;
+        }
+        h2 {
+            text-align: center;
+            color: #2d3a4b;
+            margin-bottom: 20px;
+        }
+        .upload-form {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .file-input-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #1976d2;
+            font-weight: 500;
+            border: 2px dashed #1976d2;
+            border-radius: 6px;
+            padding: 18px;
+            background: #f4f8fd;
+            transition: background 0.2s, border 0.2s;
+            justify-content: center;
+        }
+        .file-input-label:hover {
+            background: #e6f0fa;
+            border-color: #125ea2;
+        }
+        .file-icon {
+            width: 28px;
+            height: 28px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        .submit-btn {
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .submit-btn:hover {
+            background: #125ea2;
+        }
+        .messages {
+            margin-bottom: 12px;
+            padding: 10px 14px;
+            border-radius: 5px;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+            font-size: 15px;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 28px;
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 6px 16px 6px;
+            }
+        }
+    </style>
+    <script>
+        function showSelectedFiles(input) {
+            const label = document.getElementById('file-label');
+            if (input.files.length === 0) {
+                label.innerHTML = `<svg class="file-icon" viewBox="0 0 24 24" fill="#1976d2"><path d="M16 1H4a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7l-6-6zm2 19H6v-2h12v2zm0-4H6v-2h12v2zm-5-8V3.5L18.5 9H13z"/></svg> Choose PPTX files to upload`;
+            } else {
+                let fileNames = Array.from(input.files).map(f => f.name).join(', ');
+                label.textContent = fileNames;
+            }
+        }
+    </script>
 </head>
 <body>
-    <h2>Upload PPTX Files to Convert to PDF</h2>
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-    <form method="post" enctype="multipart/form-data">
-        <input type="file" name="files" multiple required>
-        <input type="submit" value="Upload and Convert">
-    </form>
+    <div class="container">
+        <h2>Convert PPTX to PDF</h2>
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="messages">
+            {% for message in messages %}
+              <div>{{ message }}</div>
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        <form class="upload-form" method="post" enctype="multipart/form-data">
+            <label class="file-input-label" id="file-label">
+                <svg class="file-icon" viewBox="0 0 24 24" fill="#1976d2">
+                    <path d="M16 1H4a2 2 0 0 0-2 2v18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7l-6-6zm2 19H6v-2h12v2zm0-4H6v-2h12v2zm-5-8V3.5L18.5 9H13z"/>
+                </svg>
+                Choose PPTX files to upload
+                <input type="file" name="files" multiple required onchange="showSelectedFiles(this)">
+            </label>
+            <button class="submit-btn" type="submit">Upload and Convert</button>
+        </form>
+        <a class="back-link" href="{{ url_for('download_files') }}">&#8592; View Converted PDFs</a>
+    </div>
 </body>
 </html>

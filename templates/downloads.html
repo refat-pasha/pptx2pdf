@@ -2,14 +2,115 @@
 <html>
 <head>
     <title>Download PDFs</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+            padding: 32px 24px 24px 24px;
+        }
+        h2 {
+            text-align: center;
+            color: #2d3a4b;
+            margin-bottom: 24px;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f9fafb;
+            margin-bottom: 12px;
+            padding: 12px 18px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+        li:hover {
+            background: #e6f0fa;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+        }
+        .file-icon {
+            width: 28px;
+            height: 28px;
+            margin-right: 12px;
+        }
+        .download-btn {
+            background: #1976d2;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 16px;
+            text-decoration: none;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s;
+            display: flex;
+            align-items: center;
+        }
+        .download-btn:hover {
+            background: #125ea2;
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 28px;
+            color: #1976d2;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 16px 6px 16px 6px;
+            }
+            li {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .download-btn {
+                margin-top: 8px;
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h2>Converted PDF Files</h2>
-    <ul>
-    {% for file in files %}
-        <li><a href="{{ url_for('download', filename=file) }}">{{ file }}</a></li>
-    {% endfor %}
-    </ul>
-    <a href="{{ url_for('upload_files') }}">Convert More Files</a>
+    <div class="container">
+        <h2>Converted PDF Files</h2>
+        <ul>
+        {% for file in files %}
+            <li>
+                <div class="file-info">
+                    <!-- Simple PDF icon using SVG -->
+                    <svg class="file-icon" viewBox="0 0 24 24" fill="#e53935">
+                        <path d="M6 2a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6H6zm7 1.5V9h5.5L13 3.5z"/>
+                    </svg>
+                    <span>{{ file }}</span>
+                </div>
+                <a class="download-btn" href="{{ url_for('download', filename=file) }}" download>
+                    &#8681; Download
+                </a>
+            </li>
+        {% endfor %}
+        </ul>
+        <a class="back-link" href="{{ url_for('upload_files') }}">&#8592; Convert More Files</a>
+    </div>
 </body>
 </html>
