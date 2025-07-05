@@ -16,7 +16,7 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB, adjust as needed
+app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 16 MB, adjust as needed
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'your_secret_key'  # Needed for flashing messages
 
@@ -39,7 +39,7 @@ def pptx_to_pdf(input_path, output_path):
 
 @app.errorhandler(413)
 def request_entity_too_large(error):
-    return 'File Too Large. Maximum upload size is 16 MB.', 413
+    return 'File Too Large. Maximum upload size is 200 MB.', 413
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_files():
