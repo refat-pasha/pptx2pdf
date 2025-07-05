@@ -45,14 +45,18 @@ def request_entity_too_large(error):
 def upload_files():
     try:
         if request.method == 'POST':
+            # Debug: print what Flask receives
+            print("request.files:", request.files)
             files = request.files.getlist('files')
+            print("files list:", files)
             if not files or files[0].filename == '':
                 flash('No files selected.')
                 return redirect(request.url)
+
             for file in files:
+                print("Processing file:", file.filename)
                 if file and allowed_file(file.filename):
                     filename = file.filename
-                    # Use absolute paths
                     input_path = os.path.abspath(os.path.join(app.config['UPLOAD_FOLDER'], filename))
                     output_filename = filename.rsplit('.', 1)[0] + '.pdf'
                     output_path = os.path.abspath(os.path.join(OUTPUT_FOLDER, output_filename))
