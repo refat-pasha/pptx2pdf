@@ -9,14 +9,14 @@ import comtypes
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, 'uploads')
 OUTPUT_FOLDER = os.path.join(BASE_DIR, 'outputs')
-ALLOWED_EXTENSIONS = {'pptx'}
+ALLOWED_EXTENSIONS = {'pptx', 'ppt'}   # ✅ Fixed here
 
 # Create necessary folders
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
 app = Flask(__name__)
-app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 16 MB, adjust as needed
+app.config['MAX_CONTENT_LENGTH'] = 200 * 1024 * 1024  # 200 MB
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.config['SECRET_KEY'] = 'your_secret_key'  # Needed for flashing messages
 
@@ -45,16 +45,12 @@ def request_entity_too_large(error):
 def upload_files():
     try:
         if request.method == 'POST':
-            # Debug: print what Flask receives
-            print("request.files:", request.files)
             files = request.files.getlist('files')
-            print("files list:", files)
             if not files or files[0].filename == '':
                 flash('No files selected.')
                 return redirect(request.url)
 
             for file in files:
-                print("Processing file:", file.filename)
                 if file and allowed_file(file.filename):
                     filename = file.filename
                     input_path = os.path.abspath(os.path.join(app.config['UPLOAD_FOLDER'], filename))
@@ -63,11 +59,10 @@ def upload_files():
                     file.save(input_path)
                     pptx_to_pdf(input_path, output_path)
                 else:
-                    flash(f"File '{file.filename}' is not a valid PPTX file.")
+                    flash(f"File '{file.filename}' is not a valid PPT/PPTX file.")
             return redirect(url_for('download_files'))
         return render_template('upload.html')
-    except Exception as e:
-        print("Error during upload or conversion:")
+    except Exception:
         traceback.print_exc()
         return "An error occurred during file upload or conversion.", 500
 
